@@ -12,6 +12,8 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using Windows.UI.Xaml.Shapes;
+using Windows.UI;
 
 // “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
 
@@ -22,9 +24,50 @@ namespace MineSweeping
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        private const  int DefaultMineNum = 10;
+        private const int DefaultRow = 9;
+        private const int DefaultColumn = 9;
         public MainPage()
         {
             this.InitializeComponent();
+            InitializeMine();
+
+        }
+
+        private void InitializeMine(int mineNum = DefaultMineNum, int row = DefaultRow, int column = DefaultColumn)
+        {
+            for (int i = 0; i < row; i++)
+            {
+                RowDefinition rd = new RowDefinition();
+                rd.Height = new GridLength(74);
+                mineArea.RowDefinitions.Add(rd);
+            }
+
+            for (int i = 0; i < row; i++)
+            {
+                ColumnDefinition cd = new ColumnDefinition();
+                cd.Width = new GridLength(74);
+                mineArea.ColumnDefinitions.Add(cd);
+            }
+
+            for (int i = 0; i < row; i++)
+            {
+                for (int j = 0; j < column; j++)
+                {
+                    Rectangle rect = new Rectangle
+                    {
+                        Width = 64,
+                        Height = 64,
+                        Fill = new SolidColorBrush(Colors.OrangeRed),
+                        Margin = new Thickness(10, 10, 10, 10)
+                    };
+
+                    mineArea.Children.Add(rect);
+                    Grid.SetRow(rect, i);
+                    Grid.SetColumn(rect, j);
+                }
+            }
+
         }
     }
 }

@@ -8,6 +8,10 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        
+        <Grid x:Name ="mineArea" Background="AliceBlue" HorizontalAlignment="Center" VerticalAlignment="Center">
+            
+        </Grid>
 
     </Grid>
 </Page>
