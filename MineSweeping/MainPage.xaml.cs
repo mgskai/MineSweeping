@@ -27,6 +27,9 @@ namespace MineSweeping
         private const  int DefaultMineNum = 10;
         private const int DefaultRow = 9;
         private const int DefaultColumn = 9;
+
+        private int totalSquares;
+        private bool[] mineArray;
         public MainPage()
         {
             this.InitializeComponent();
@@ -36,6 +39,25 @@ namespace MineSweeping
 
         private void InitializeMine(int mineNum = DefaultMineNum, int row = DefaultRow, int column = DefaultColumn)
         {
+            totalSquares = row * column;
+            mineArray = new bool[totalSquares];
+
+            for(int i = 0; i < totalSquares; i++)
+            {
+                mineArray[i] = false;
+            }
+
+            Random rand = new Random(Guid.NewGuid().GetHashCode());
+            for (int i = mineNum; i > 0; )
+            {
+                int index = rand.Next(0, totalSquares);
+                if(mineArray[index] == false)
+                {
+                    mineArray[index] = true;
+                    i--;
+                }
+            }
+
             for (int i = 0; i < row; i++)
             {
                 RowDefinition rd = new RowDefinition();
