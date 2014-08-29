@@ -28,6 +28,7 @@ namespace MineSweeping
         private const int DefaultRow = 9;
         private const int DefaultColumn = 9;
 
+        private bool firstTap = false;
         private int totalSquares;
         private bool[] mineArray;
         public MainPage()
@@ -47,17 +48,6 @@ namespace MineSweeping
                 mineArray[i] = false;
             }
 
-            Random rand = new Random(Guid.NewGuid().GetHashCode());
-            for (int i = mineNum; i > 0; )
-            {
-                int index = rand.Next(0, totalSquares);
-                if(mineArray[index] == false)
-                {
-                    mineArray[index] = true;
-                    i--;
-                }
-            }
-
             for (int i = 0; i < row; i++)
             {
                 RowDefinition rd = new RowDefinition();
@@ -68,7 +58,7 @@ namespace MineSweeping
             for (int i = 0; i < row; i++)
             {
                 ColumnDefinition cd = new ColumnDefinition();
-                cd.Width = new GridLength(74);
+                cd.Width = new GridLength(80);
                 mineArea.ColumnDefinitions.Add(cd);
             }
 
@@ -78,18 +68,25 @@ namespace MineSweeping
                 {
                     Rectangle rect = new Rectangle
                     {
-                        Width = 64,
-                        Height = 64,
                         Fill = new SolidColorBrush(Colors.OrangeRed),
                         Margin = new Thickness(10, 10, 10, 10)
                     };
 
+                    rect.Tapped += new TappedEventHandler(MineTapped);
                     mineArea.Children.Add(rect);
                     Grid.SetRow(rect, i);
                     Grid.SetColumn(rect, j);
                 }
             }
+        }
 
+        private void MineTapped(object sender, TappedRoutedEventArgs e)
+        {
+            Rectangle rect = sender as Rectangle;
+            if(firstTap == false)
+            {
+                rect
+            }
         }
     }
 }
