@@ -85,7 +85,6 @@ namespace MineSweeping
             Rectangle rect = sender as Rectangle;
             if(firstTap == false)
             {
-                rect
             }
         }
     }
