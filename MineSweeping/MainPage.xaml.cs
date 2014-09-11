@@ -69,6 +69,7 @@ namespace MineSweeping
         {
             PosX = x;
             PosY = y;
+            IsMine = false;
         }
 
     }
@@ -91,7 +92,6 @@ namespace MineSweeping
         }
 
         private void InitializeMineForm(
-            int mineNum = DefaultMineNum, 
             int row = DefaultRow, 
             int column = DefaultColumn)
         {
@@ -139,15 +139,15 @@ namespace MineSweeping
 
         private void MineControlClick(object sender, RoutedEventArgs e)
         {
-            if(firstClick)
-            {
-                InitializeMine();
-                firstClick = false;
-            }
-
             Button mine = sender as Button;
             mine.IsEnabled = false;
             MineTag mineTag = mine.Tag as MineTag;
+
+            if(firstClick)
+            {
+                InitializeMine(mineTag.PosX, mineTag.PosY);
+                firstClick = false;
+            }
 
             if(mineTag.IsMine)
             {
@@ -157,13 +157,34 @@ namespace MineSweeping
             {
                 int mineNum = GetNeighborMineNum(mineTag.PosX, mineTag.PosY);
                 mine.Background = new SolidColorBrush(Colors.Green);
-                mine.Content = mineNum.ToString();
-                
+                mine.Content = mineNum.ToString(); 
             }
         }
 
-        private void InitializeMine()
+        private void InitializeMine(
+            int x, int y,
+            int mineNum = DefaultMineNum,
+            int row = DefaultRow, 
+            int column = DefaultColumn)
         {
+            Random rd = new Random(Guid.NewGuid().GetHashCode());
+            for(int i = 0; i < mineNum; )
+            {
+                int minePos = rd.Next(0, mineNum + 1);
+                int minePosX = minePos / row;
+                int minePosY = minePos % column;
+
+                MineTag mt = mineControl[minePosX, minePosY].Tag as MineTag;
+                if(mt.IsMine || (x == minePosX && y == minePosY))
+                {
+                    continue;
+                }
+                else
+                {
+                    mt.IsMine = true;
+                    i++;
+                }
+            }
 
         }
 
