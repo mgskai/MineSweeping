@@ -22,6 +22,56 @@ namespace MineSweeping
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
+    /// 
+
+    class MineTag
+    {
+        private int _PosX;
+        public int PosX
+        {
+            get
+            {
+                return _PosX;
+            }
+            set
+            {
+                _PosX = value;
+            }
+        }
+        
+        private int _PosY;
+        public int PosY
+        {
+            get
+            {
+                return _PosY;
+            }
+            set
+            {
+                _PosY = value;
+            }
+        }
+
+        private bool _IsMine;
+        public bool IsMine
+        {
+            get
+            {
+                return _IsMine;
+            }
+            set
+            {
+                _IsMine = value;
+            }
+        }
+
+        public MineTag(int x, int y)
+        {
+            PosX = x;
+            PosY = y;
+        }
+
+    }
     public sealed partial class MainPage : Page
     {
         private const  int DefaultMineNum = 10;
@@ -71,8 +121,7 @@ namespace MineSweeping
                 {
                     mineControl[i, j] = new Button
                     {
-                        Tag = 0,
-                        Name = i.ToString() +" " +  j.ToString(),
+                        Tag = new MineTag(i, j),
                         Width = 50, 
                         Height = 50,
                         Background = new SolidColorBrush(Colors.Red),
@@ -97,19 +146,16 @@ namespace MineSweeping
             }
 
             Button mine = sender as Button;
-            int posX = 0;
-            int posY = 0;
-
-            GetMineControlPos(mine, ref posX, ref posY);
             mine.IsEnabled = false;
+            MineTag mineTag = mine.Tag as MineTag;
 
-            if(IsMine(mine))
+            if(mineTag.IsMine)
             {
                 mine.Background = new SolidColorBrush(Colors.Black);
             }
             else
             {
-                int mineNum = GetNeighborMineNum(posX, posY);
+                int mineNum = GetNeighborMineNum(mineTag.PosX, mineTag.PosY);
                 mine.Background = new SolidColorBrush(Colors.Green);
                 mine.Content = mineNum.ToString();
                 
@@ -126,37 +172,5 @@ namespace MineSweeping
             return 0;
         }
         
-        private void GetMineControlPos(Button mine, ref int x, ref int y)
-        {
-            string[] pos = mine.Name.Split(' ');
-            x = Convert.ToInt32(pos[0]);
-            y = Convert.ToInt32(pos[1]);
-        }
-
-        private bool IsMine(Button mine)
-        {
-            if(Convert.ToInt32(mine.Tag) == 1)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        private void SetMineControlState(ref Button mine, bool isMine)
-        {
-            if(isMine)
-            {
-                mine.Tag = 1;
-            }
-            else
-            {
-                mine.Tag = 0;
-            }
-        }
-
-
     }
 }
