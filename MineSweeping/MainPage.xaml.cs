@@ -31,14 +31,16 @@ namespace MineSweeping
         private int totalSquares;
         private Button[,] mineControl;
 
+        private bool firstClick = true;
+
         public MainPage()
         {
             this.InitializeComponent();
-            InitializeMine();
+            InitializeMineForm();
 
         }
 
-        private void InitializeMine(
+        private void InitializeMineForm(
             int mineNum = DefaultMineNum, 
             int row = DefaultRow, 
             int column = DefaultColumn)
@@ -67,20 +69,94 @@ namespace MineSweeping
             {
                 for (int j = 0; j < column; j++)
                 {
-                    Rectangle rect = new Rectangle
+                    mineControl[i, j] = new Button
                     {
-                        Width = 64,
-                        Height = 64,
-                        Fill = new SolidColorBrush(Colors.OrangeRed),
+                        Tag = 0,
+                        Name = i.ToString() +" " +  j.ToString(),
+                        Width = 50, 
+                        Height = 50,
+                        Background = new SolidColorBrush(Colors.Red),
                         Margin = new Thickness(10, 10, 10, 10)
                     };
 
-                    mineArea.Children.Add(rect);
-                    Grid.SetRow(rect, i);
-                    Grid.SetColumn(rect, j);
+                    mineControl[i, j].Click += new RoutedEventHandler(MineControlClick);
+
+                    mineArea.Children.Add(mineControl[i, j]);
+                    Grid.SetRow(mineControl[i, j], i);
+                    Grid.SetColumn(mineControl[i, j], j);
                 }
             }
+        }
+
+        private void MineControlClick(object sender, RoutedEventArgs e)
+        {
+            if(firstClick)
+            {
+                InitializeMine();
+                firstClick = false;
+            }
+
+            Button mine = sender as Button;
+            int posX = 0;
+            int posY = 0;
+
+            GetMineControlPos(mine, ref posX, ref posY);
+            mine.IsEnabled = false;
+
+            if(IsMine(mine))
+            {
+                mine.Background = new SolidColorBrush(Colors.Black);
+            }
+            else
+            {
+                int mineNum = GetNeighborMineNum(posX, posY);
+                mine.Background = new SolidColorBrush(Colors.Green);
+                mine.Content = mineNum.ToString();
+                
+            }
+        }
+
+        private void InitializeMine()
+        {
 
         }
+
+        private int GetNeighborMineNum(int posX, int posY)
+        {
+            return 0;
+        }
+        
+        private void GetMineControlPos(Button mine, ref int x, ref int y)
+        {
+            string[] pos = mine.Name.Split(' ');
+            x = Convert.ToInt32(pos[0]);
+            y = Convert.ToInt32(pos[1]);
+        }
+
+        private bool IsMine(Button mine)
+        {
+            if(Convert.ToInt32(mine.Tag) == 1)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private void SetMineControlState(ref Button mine, bool isMine)
+        {
+            if(isMine)
+            {
+                mine.Tag = 1;
+            }
+            else
+            {
+                mine.Tag = 0;
+            }
+        }
+
+
     }
 }

@@ -9,7 +9,7 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         
-        <Grid x:Name ="mineArea" Background="AliceBlue" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Grid x:Name ="mineArea" Background="Black" HorizontalAlignment="Center" VerticalAlignment="Center">
             
         </Grid>
 
