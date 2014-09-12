@@ -174,7 +174,15 @@ namespace MineSweeping
         private void MineControlRightClick(object sender, RightTappedRoutedEventArgs e)
         {
             Button mine = sender as Button;
-            mine.Background = new SolidColorBrush(Colors.Blue);
+            SolidColorBrush scb = mine.Background as SolidColorBrush;
+            if(scb.Color != Colors.Blue)
+            {
+                mine.Background = new SolidColorBrush(Colors.Blue);
+            }
+            else
+            {
+                mine.Background = new SolidColorBrush(Colors.Red);
+            }
         }
 
         private void InitializeMine(
