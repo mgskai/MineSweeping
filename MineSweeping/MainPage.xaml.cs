@@ -133,7 +133,8 @@ namespace MineSweeping
                     };
 
                     mineControl[i, j].Click += new RoutedEventHandler(MineControlClick);
-                    mineControl[i, j].RightTapped += new RightTappedEventHandler(MineControlRightClick);
+                    mineControl[i, j].RightTapped 
+                        += new RightTappedEventHandler(MineControlRightClick);
 
                     mineArea.Children.Add(mineControl[i, j]);
                     Grid.SetRow(mineControl[i, j], i);
@@ -161,8 +162,12 @@ namespace MineSweeping
             else
             {
                 int mineNum = GetNeighborMineNum(mineTag.PosX, mineTag.PosY);
-                mine.Background = new SolidColorBrush(Colors.Green);
-                mine.Content = mineNum.ToString(); 
+                //mine.Background = new SolidColorBrush(Colors.Green);
+                mine.Content = mineNum.ToString();
+                if (mineNum == 0)
+                {
+                    CheckNeighborMine(mineTag.PosX, mineTag.PosY);
+                }
             }
         }
 
@@ -221,5 +226,54 @@ namespace MineSweeping
                 return totalNum;
         }
         
+        private void CheckNeighborMine(int posX, int posY)
+        {
+            bool[,] checkStatus = new bool[Row, Column];
+
+            for (int i = 0; i < Row; i++ )
+            {
+                for (int j = 0; j < Column; j++ )
+                {
+                    checkStatus[i, j] = false;
+                }
+            }
+
+            Stack<Button> mineStack = new Stack<Button>();
+
+            mineStack.Push(mineControl[posX, posY]);
+
+            while (mineStack.Count != 0)
+            {
+                Button mine = mineStack.Pop();
+                MineTag mt = mine.Tag as MineTag;
+                if (checkStatus[mt.PosX, mt.PosY] != true)
+                {
+                    checkStatus[mt.PosX, mt.PosY] = true;
+                    int mineNum = GetNeighborMineNum(mt.PosX, mt.PosY);
+                    if (mineNum == 0)
+                    {
+                        mine.IsEnabled = false;
+                        mine.Content = mineNum;
+                        int minX = mt.PosX - 1 > 0 ? mt.PosX - 1 : 0;
+                        int maxX = mt.PosX + 1 < Row ? mt.PosX + 1 : Row - 1;
+                        int minY = mt.PosY - 1 > 0 ? mt.PosY - 1 : 0;
+                        int maxY = mt.PosY + 1 < Column ? mt.PosY + 1 : Column - 1;
+
+                        for (int i = minX; i <= maxX; i++)
+                        {
+                            for (int j = minY; j <= maxY; j++)
+                            {
+                                mineStack.Push(mineControl[i, j]);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        MineControlClick(mine, null);
+                    }
+                }
+            }
+
+        }
     }
 }
