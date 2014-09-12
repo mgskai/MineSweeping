@@ -79,6 +79,10 @@ namespace MineSweeping
         private const int DefaultRow = 9;
         private const int DefaultColumn = 9;
 
+        private int MineNum = DefaultMineNum;
+        private int Row = DefaultRow;
+        private int Column = DefaultColumn;
+
         private int totalSquares;
         private Button[,] mineControl;
 
@@ -177,7 +181,7 @@ namespace MineSweeping
             Random rd = new Random(Guid.NewGuid().GetHashCode());
             for(int i = 0; i < mineNum; )
             {
-                int minePos = rd.Next(0, mineNum + 1);
+                int minePos = rd.Next(0, totalSquares);
                 int minePosX = minePos / row;
                 int minePosY = minePos % column;
 
@@ -197,7 +201,24 @@ namespace MineSweeping
 
         private int GetNeighborMineNum(int posX, int posY)
         {
-            return 0;
+            int totalNum = 0;
+            int minX = posX - 1 > 0 ? posX - 1 : 0;
+            int maxX = posX + 1 < Row ? posX + 1 : Row - 1;
+            int minY = posY - 1 > 0 ? posY - 1 : 0;
+            int maxY = posY + 1 < Column ? posY + 1 : Column - 1;
+
+            for (int i = minX; i <= maxX; i++ )
+            {
+                for(int j = minY; j <= maxY; j++)
+                {
+                    MineTag mt = mineControl[i, j].Tag as MineTag;
+                    if(mt.IsMine)
+                    {
+                        totalNum++;
+                    }
+                }
+            }
+                return totalNum;
         }
         
     }
