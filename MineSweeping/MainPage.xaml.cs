@@ -129,6 +129,7 @@ namespace MineSweeping
                     };
 
                     mineControl[i, j].Click += new RoutedEventHandler(MineControlClick);
+                    mineControl[i, j].RightTapped += new RightTappedEventHandler(MineControlRightClick);
 
                     mineArea.Children.Add(mineControl[i, j]);
                     Grid.SetRow(mineControl[i, j], i);
@@ -159,6 +160,12 @@ namespace MineSweeping
                 mine.Background = new SolidColorBrush(Colors.Green);
                 mine.Content = mineNum.ToString(); 
             }
+        }
+
+        private void MineControlRightClick(object sender, RightTappedRoutedEventArgs e)
+        {
+            Button mine = sender as Button;
+            mine.Background = new SolidColorBrush(Colors.Blue);
         }
 
         private void InitializeMine(
